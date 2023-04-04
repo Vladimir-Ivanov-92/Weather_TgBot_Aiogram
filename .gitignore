@@ -1,0 +1,8 @@
+# ide folders
+.idea/
+
+# not project files
+__pycache__
+db.sqlite3
+.DS_Store
+.env
