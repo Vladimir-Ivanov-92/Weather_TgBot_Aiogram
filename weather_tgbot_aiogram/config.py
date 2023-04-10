@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-
 from pydantic import BaseSettings, SecretStr
 
 load_dotenv()

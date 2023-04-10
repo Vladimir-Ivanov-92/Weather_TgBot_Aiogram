@@ -1,41 +1,19 @@
 from datetime import datetime
-
 from pprint import pprint
+
 import pytz
 import requests
-from pydantic import BaseModel
-
 from config import config
-
-
-class Weather(BaseModel):
-    description: str
-    icon: str
-    id: int
-    main: str
-
-
-class OpenWeatherJson(BaseModel):
-    base: str
-    clouds: dict
-    cod: int
-    coord: dict
-    dt: int
-    id: int
-    main: dict
-    name: str
-    sys: dict
-    timezone: int
-    visibility: int
-    weather: list[Weather]
-    wind: dict
+from models.pydantic_models import OpenWeatherJson
 
 
 def get_weather_now(message):
     try:
-        r = requests.get(
-            f"https://api.openweathermap.org/data/2.5/weather?q={message}&appid={config.open_weather_token.get_secret_value()}&units=metric&lang=ru"
-        )
+        r = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={message}"
+                         f"&appid={config.open_weather_token.get_secret_value()}"
+                         "&units=metric&lang=ru"
+                         )
+        print(r.content)
         data = OpenWeatherJson.parse_raw(r.content)
         pprint(data)
 
@@ -67,12 +45,13 @@ def get_weather_now(message):
 
         sunset = datetime.fromtimestamp(data.sys["sunset"])
 
-        message_reply = (f"***{datetime.now(tz_moscow).strftime('%Y-%m-%d  %H:%M')}***\n"
-                         f"Погода в городе {city}:\nТемпература: {cur_weather:.0f} C° {wd}\n"
-                         f"Скорость ветра: {wind} m/c\n"
-                         f"Восход: {sunrise}\nЗакат: {sunset}\n"
-                         f"***Хорошего дня!***"
-                         )
+        message_reply = (
+            f"***{datetime.now(tz_moscow).strftime('%Y-%m-%d  %H:%M')}***\n"
+            f"Погода в городе {city}:\nТемпература: {cur_weather:.0f} C° {wd}\n"
+            f"Скорость ветра: {wind} m/c\n"
+            f"Восход: {sunrise}\nЗакат: {sunset}\n"
+            f"***Хорошего дня!***"
+        )
         print("message_reply", message_reply)
         return message_reply
 
