@@ -1,7 +1,8 @@
 import asyncio
 
-from aiogram import Bot, Dispatcher, Router, F
+from aiogram import Bot, Dispatcher, F, Router
 from aiogram.filters import Command
+
 from config import config
 from handlers import *
 

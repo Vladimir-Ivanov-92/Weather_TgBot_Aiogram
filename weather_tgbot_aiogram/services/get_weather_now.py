@@ -3,6 +3,7 @@ from pprint import pprint
 
 import pytz
 import requests
+
 from config import config
 from models.pydantic_models import OpenWeatherJson
 
