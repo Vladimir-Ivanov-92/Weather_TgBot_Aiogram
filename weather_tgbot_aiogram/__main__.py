@@ -10,7 +10,7 @@ router = Router()
 # Создаем глобальную переменную, в которой указываем все команды и функции handlers из
 # пакета handlers
 COMMAND_HANDLERS = {
-    "start": command_start_handler,
+    "start": start_handler,
     "add_to_list": add_to_list,
     "show_list": show_list
 }
@@ -23,7 +23,7 @@ async def main() -> None:
         router.message.register(command_handler, Command(command_name))
 
     # Регистрация router для функции, принимающей на вход текст от user
-    router.message.register(weather, F.text)
+    router.message.register(weather_now_handler, F.text)
 
     dp = Dispatcher()
     dp.include_router(router)
