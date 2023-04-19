@@ -2,7 +2,6 @@ import asyncio
 
 from aiogram import Bot, Dispatcher, F, Router
 from aiogram.filters import Command
-
 from config import config
 from handlers import *
 
@@ -13,7 +12,7 @@ router = Router()
 COMMAND_HANDLERS = {
     "start": start_handler,
     "add_to_list": add_to_list,
-    "show_list": show_list
+    "show_list": show_list,
 }
 
 
@@ -23,8 +22,9 @@ async def main() -> None:
     for command_name, command_handler in COMMAND_HANDLERS.items():
         router.message.register(command_handler, Command(command_name))
 
-    # Регистрация router для функции, принимающей на вход текст от user
-    router.message.register(weather_now_handler, F.text)
+    # Регистрация router для функций, принимающей на вход текст от user
+    # router.message.register(weather_now_handler, F.text)
+    router.message.register(weather_n_days_handler, F.text)
 
     dp = Dispatcher()
     dp.include_router(router)

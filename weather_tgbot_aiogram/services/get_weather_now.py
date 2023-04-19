@@ -1,11 +1,9 @@
 from datetime import datetime
-from pprint import pprint
 
 import pytz
 import requests
-
 from config import config
-from models.pydantic_models import OpenWeatherJson
+from models.pydantic_models import WeatherNowJson
 
 
 def get_weather_now(message):
@@ -14,12 +12,10 @@ def get_weather_now(message):
                          f"&appid={config.open_weather_token.get_secret_value()}"
                          "&units=metric&lang=ru"
                          )
-        print(r.content)
-        data = OpenWeatherJson.parse_raw(r.content)
-        pprint(data)
+        data = WeatherNowJson.parse_raw(r.content)
 
         sky = data.weather[0].description
-        print("sky", sky)
+
         code_to_smile = {
             "Clear": "Ясно \U00002600",
             "Clouds": sky + " \U00002601",

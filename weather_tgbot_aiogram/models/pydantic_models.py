@@ -8,7 +8,7 @@ class Weather(BaseModel):
     main: str
 
 
-class OpenWeatherJson(BaseModel):
+class WeatherNowJson(BaseModel):
     base: str
     clouds: dict
     cod: int
@@ -22,3 +22,22 @@ class OpenWeatherJson(BaseModel):
     visibility: int
     weather: list[Weather]
     wind: dict
+
+
+class ListWithWeather(BaseModel):
+    clouds: dict
+    dt: int
+    dt_txt: str
+    main: dict
+    pop: int
+    sys: dict
+    visibility: int
+    weather: list[Weather]
+    wind: dict
+
+
+class WeatherNDaysJson(BaseModel):
+    city: dict
+    cnt: int
+    cod: str
+    list: list[ListWithWeather]
