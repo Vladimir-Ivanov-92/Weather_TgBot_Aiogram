@@ -3,6 +3,7 @@ from datetime import datetime
 import pytz
 import requests
 from config import config
+from icon import code_to_smile
 from models.pydantic_models import WeatherNowJson
 
 
@@ -13,17 +14,6 @@ def get_weather_now(city):
                          "&units=metric&lang=ru"
                          )
         data = WeatherNowJson.parse_raw(r.content)
-        sky = data.weather[0].description
-        code_to_smile = {
-            "Clear": "Ясно \U00002600",
-            "Clouds": sky + " \U00002601",
-            "Rain": "Дождь \U00002614",
-            "Drizzle": "Дождь \U00002614",
-            "Thunderstorm": "Гроза \U000026A1",
-            "Snow": "Гроза \U0001F328",
-            "Mist": "Туман \U0001F32B",
-            "Smoke": "Дымка \U0001F32B"
-        }
         city = data.name
         cur_weather = data.main["temp"]
         wind = data.wind["speed"]

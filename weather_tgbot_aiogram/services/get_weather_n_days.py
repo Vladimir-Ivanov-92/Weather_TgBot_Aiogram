@@ -2,7 +2,7 @@ import requests
 from config import config
 from models.pydantic_models import WeatherNDaysJson
 
-from icon import picture_time_of_day
+from icon import picture_time_of_day, code_to_smile
 
 
 def get_weather_n_days(city, count: int = 8):
@@ -17,22 +17,9 @@ def get_weather_n_days(city, count: int = 8):
         message_finaly = []
 
         for i in range(1, count, 2):
-            sky = data.list[i].weather[0].description
-            code_to_smile = {
-                "Clear": "Ясно \U00002600",
-                "Clouds": sky + " \U00002601",
-                "Rain": "Дождь \U00002614",
-                "Drizzle": "Дождь \U00002614",
-                "Thunderstorm": "Гроза \U000026A1",
-                "Snow": "Гроза \U0001F328",
-                "Mist": "Туман \U0001F32B"
-            }
-
             city = data.city['name']
             date_and_time = data.list[i].dt_txt
-
             date = date_and_time.split(" ")[0]
-
             time = date_and_time.split(" ")[1]
             time_h_m = ":".join((time.split(":"))[:2])
 
