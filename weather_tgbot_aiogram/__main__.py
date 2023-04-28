@@ -16,6 +16,7 @@ COMMAND_HANDLERS = {
     "start": start_handler,
     "add_to_list": add_to_list,
     "show_list": show_list,
+    "admin": admin_handler,
 }
 
 
