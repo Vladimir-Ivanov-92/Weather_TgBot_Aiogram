@@ -1,8 +1,7 @@
 import requests
 from config import config
+from icon import code_to_smile, picture_time_of_day
 from models.pydantic_models import WeatherNDaysJson
-
-from icon import picture_time_of_day, code_to_smile
 
 
 def get_weather_n_days(city, count: int = 8):
