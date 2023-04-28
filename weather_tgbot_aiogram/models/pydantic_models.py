@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Weather(BaseModel):
+class WeatherNowList(BaseModel):
     description: str
     icon: str
     id: int
@@ -20,11 +20,11 @@ class WeatherNowJson(BaseModel):
     sys: dict
     timezone: int
     visibility: int
-    weather: list[Weather]
+    weather: list[WeatherNowList]
     wind: dict
 
 
-class ListWithWeather(BaseModel):
+class WeatherNDaysList(BaseModel):
     clouds: dict
     dt: int
     dt_txt: str
@@ -32,7 +32,7 @@ class ListWithWeather(BaseModel):
     pop: int
     sys: dict
     visibility: int
-    weather: list[Weather]
+    weather: list[WeatherNowList]
     wind: dict
 
 
@@ -40,4 +40,4 @@ class WeatherNDaysJson(BaseModel):
     city: dict
     cnt: int
     cod: str
-    list: list[ListWithWeather]
+    list: list[WeatherNDaysList]
