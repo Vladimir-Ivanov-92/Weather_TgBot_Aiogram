@@ -1,4 +1,5 @@
 from aiogram import types
+from handlers import text_handlers
 
 
 def get_keyboard():
@@ -18,7 +19,8 @@ def get_keyboard():
     return keybord
 
 
-async def get_weather_period_inlinekeyboard(message: types.Message, city):
+async def get_weather_period_inlinekeyboard(message: types.Message):
+    city = text_handlers.CITY[message.from_user.id]
     await message.answer(
         f"Выбери период, за который показать погоду в городе {city}:",
         reply_markup=get_keyboard()
