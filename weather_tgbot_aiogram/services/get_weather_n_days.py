@@ -2,20 +2,20 @@ import requests
 from config import config
 from models.pydantic_models import WeatherNDaysJson
 
-from .icon import picture_time_of_day
+from icon import picture_time_of_day
 
 
-def get_weather_n_days(message, count: int = 8):
-    r = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={message}"
-                     f"&appid={config.open_weather_token.get_secret_value()}"
-                     f"&units=metric&lang=ru&cnt={count}"
-                     )
-
-    data = WeatherNDaysJson.parse_raw(r.content)
-
-    message_reply = []
-    message_finaly = []
+def get_weather_n_days(city, count: int = 8):
     try:
+        r = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}"
+                         f"&appid={config.open_weather_token.get_secret_value()}"
+                         f"&units=metric&lang=ru&cnt={count}"
+                         )
+
+        data = WeatherNDaysJson.parse_raw(r.content)
+        message_reply = []
+        message_finaly = []
+
         for i in range(1, count, 2):
             sky = data.list[i].weather[0].description
             code_to_smile = {
@@ -42,8 +42,8 @@ def get_weather_n_days(message, count: int = 8):
                 message_text = "Eror! icon_time_of_day"
 
             cur_weather = data.list[i].main['temp']
-
             weather_description = data.list[i].weather[0].main
+
             if weather_description in code_to_smile:
                 wd = code_to_smile[weather_description]
             else:
@@ -70,4 +70,4 @@ def get_weather_n_days(message, count: int = 8):
     except Exception as e:
         print(e)
         message_reply = ("\U00002620 Проверьте навание города \U00002620")
-    return message_reply
+        return message_reply
