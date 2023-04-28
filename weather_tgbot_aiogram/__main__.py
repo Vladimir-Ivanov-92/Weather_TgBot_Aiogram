@@ -1,12 +1,12 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher, F, Router
-from aiogram.filters import Command, Text
+from aiogram.filters import Command
 from config import config
 from handlers import *
-from handlers.callback_handlers import (get_weather_n_days_handler,
-                                        get_weather_now_handler)
+from handlers.callback_handlers import get_weather_n_days_handler
 from handlers.text_handlers import city
+from services.inlinekeyboard import WeatherDaysCallbackFactory
 
 router = Router()
 
@@ -30,10 +30,8 @@ async def main() -> None:
     router.message.register(city, F.text)
 
     # Регистрация функций, принимающей на вход callback_data от InlineKeyboardButton
-    router.callback_query.register(get_weather_now_handler,
-                                   Text("get_weather_now_handler"))
     router.callback_query.register(get_weather_n_days_handler,
-                                   Text("get_weather_n_days_handler"))
+                                   WeatherDaysCallbackFactory.filter())
 
     dp = Dispatcher()
     dp.include_router(router)

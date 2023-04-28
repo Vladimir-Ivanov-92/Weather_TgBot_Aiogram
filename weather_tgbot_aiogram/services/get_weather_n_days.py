@@ -4,7 +4,7 @@ from icon import code_to_smile, picture_time_of_day
 from models.pydantic_models import WeatherNDaysJson
 
 
-def get_weather_n_days(city, count: int = 8):
+def get_weather_n_days(city, count: int):
     try:
         r = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}"
                          f"&appid={config.open_weather_token.get_secret_value()}"
