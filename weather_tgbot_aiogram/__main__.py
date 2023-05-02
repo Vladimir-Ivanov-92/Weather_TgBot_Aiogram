@@ -20,7 +20,7 @@ COMMAND_HANDLERS = {
 }
 
 
-async def main() -> None:
+async def main():
     # Регистрируем comand handler с помощью словаря, содержащего ссылки на функции в
     # модуле handlers
     for command_name, command_handler in COMMAND_HANDLERS.items():

@@ -8,7 +8,7 @@ STRING_FOR_STRIP = "Выбери период, за который показа�
 
 async def get_weather_n_days_handler(callback: types.CallbackQuery,
                                      callback_data: WeatherDaysCallbackFactory):
-    '''Функция обрабатывающая callback_data="get_weather_n_days_handler" '''
+    '''Функция обрабатывающая callback_data=WeatherDaysCallbackFactory'''
 
     city_from_callback = callback.message.text.strip(STRING_FOR_STRIP)
 
