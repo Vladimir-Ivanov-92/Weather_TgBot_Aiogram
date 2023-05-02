@@ -1,7 +1,7 @@
 import requests
 from aiogram import types
 from config import config
-from services.inlinekeyboard import get_weather_period_inlinekeyboard
+from keyboards.inlinekeyboard import get_weather_period_inlinekeyboard
 
 # Глобальная переменная запоминающая выбранный город для каждго пользователя по id.
 CITY = {}

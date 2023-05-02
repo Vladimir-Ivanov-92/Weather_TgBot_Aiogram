@@ -6,7 +6,7 @@ from config import config
 from handlers import *
 from handlers.callback_handlers import get_weather_n_days_handler
 from handlers.text_handlers import city
-from services.inlinekeyboard import WeatherDaysCallbackFactory
+from keyboards.inlinekeyboard import WeatherDaysCallbackFactory
 
 router = Router()
 
@@ -14,8 +14,6 @@ router = Router()
 # модуля handlers
 COMMAND_HANDLERS = {
     "start": start_handler,
-    "add_to_list": add_to_list,
-    "show_list": show_list,
     "admin": admin_handler,
 }
 
@@ -38,9 +36,9 @@ async def main():
 
     bot = Bot(config.bot_token.get_secret_value(), parse_mode="HTML")
 
-    mylist = [1, 2, 3]  # Вместо списка можно передать бд
-
-    await dp.start_polling(bot, mylist=mylist)
+    # Запускаем бота и пропускаем все накопленные входящие
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
 
 
 if __name__ == '__main__':

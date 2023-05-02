@@ -1,7 +1,7 @@
 from aiogram import types
 from services.get_weather_n_days import get_weather_n_days
 from services.get_weather_now import get_weather_now
-from services.inlinekeyboard import WeatherDaysCallbackFactory
+from keyboards.inlinekeyboard import WeatherDaysCallbackFactory
 
 STRING_FOR_STRIP = "Выбери период, за который показать погоду в городе:"
 
