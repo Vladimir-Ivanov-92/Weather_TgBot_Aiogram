@@ -1,8 +1,12 @@
-from aiogram import types
+from aiogram import Router, types
+from aiogram.filters import Command
 from handlers import text_handlers
 from keyboards.standard_keyboard import get_standart_city_keyboard
 
+router = Router()
 
+
+@router.message(Command("start"))
 async def start_handler(message: types.Message):
     '''Функция обрабатывающая команду "/start" '''
 
@@ -13,8 +17,10 @@ async def start_handler(message: types.Message):
     )
 
 
+@router.message(Command("admin"))
 async def admin_handler(message: types.Message):
     '''Функция обрабатывающая команду "/admin" '''
+
     # buttons = [
     #     [types.InlineKeyboardButton(text="Показать словарь CITY",
     #                                 callback_data="get_weather_now_handler")],

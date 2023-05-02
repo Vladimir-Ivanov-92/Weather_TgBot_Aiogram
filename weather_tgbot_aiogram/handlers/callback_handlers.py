@@ -1,11 +1,14 @@
-from aiogram import types
+from aiogram import Router, types
 from keyboards.inlinekeyboard import WeatherDaysCallbackFactory
 from services.get_weather_n_days import get_weather_n_days
 from services.get_weather_now import get_weather_now
 
 STRING_FOR_STRIP = "Выбери период, за который показать погоду в городе:"
 
+router = Router()
 
+
+@router.callback_query(WeatherDaysCallbackFactory.filter())
 async def get_weather_n_days_handler(callback: types.CallbackQuery,
                                      callback_data: WeatherDaysCallbackFactory):
     '''Функция обрабатывающая callback_data=WeatherDaysCallbackFactory'''
