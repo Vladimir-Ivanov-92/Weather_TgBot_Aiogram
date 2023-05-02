@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 
+# Создаются модели для парсинга данных, получаемых при запросе с OpenWeather
 class WeatherNowList(BaseModel):
     description: str
     icon: str
