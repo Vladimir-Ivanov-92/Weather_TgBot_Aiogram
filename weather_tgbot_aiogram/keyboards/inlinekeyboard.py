@@ -1,10 +1,8 @@
 from typing import Optional
 
-from aiogram import types
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from handlers import text_handlers
 
 
 class WeatherDaysCallbackFactory(CallbackData, prefix='get_weather'):
@@ -25,11 +23,3 @@ def get_inline_weather_keyboard() -> InlineKeyboardMarkup:
     # builder.button(text="К начальному меню", callback_data=WeatherDaysCallbackFactory(days=1)),
     keyboard.adjust(1)
     return keyboard.as_markup()
-
-
-async def get_weather_period_from_inlinekeyboard(message: types.Message):
-    city = text_handlers.CITY[message.from_user.id]
-    await message.answer(
-        f"Выбери период, за который показать погоду в городе {city}:",
-        reply_markup=get_inline_weather_keyboard()
-    )
