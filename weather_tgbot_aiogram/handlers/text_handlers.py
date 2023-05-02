@@ -1,7 +1,7 @@
 import requests
 from aiogram import types
 from config import config
-from keyboards.inlinekeyboard import get_weather_period_inlinekeyboard
+from keyboards.inlinekeyboard import get_weather_period_from_inlinekeyboard
 
 # Глобальная переменная запоминающая выбранный город для каждго пользователя по id.
 CITY = {}
@@ -22,4 +22,4 @@ async def city(message: types.Message):
         await message.answer(text=r.json()['message'])
     else:
         CITY[message.from_user.id] = city_from_user
-        await get_weather_period_inlinekeyboard(message)
+        await get_weather_period_from_inlinekeyboard(message)

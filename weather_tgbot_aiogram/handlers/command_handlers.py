@@ -1,23 +1,15 @@
 from aiogram import types
 from handlers import text_handlers
+from keyboards.standard_keyboard import get_standart_city_keyboard
 
 
 async def start_handler(message: types.Message):
     '''Функция обрабатывающая команду "/start" '''
 
-    keyboard_button = [
-        [types.KeyboardButton(text="Saint Petersburg")]
-    ]
-    keyboard_start = types.ReplyKeyboardMarkup(
-        keyboard=keyboard_button,
-        resize_keyboard=True,
-        input_field_placeholder="Выберите город или введите название города "
-                                "на английском!",
-    )
     await message.answer(
         text="Укажи название города на английском и я расскажу о погоде в этом городе!\n"
              "Нажми /help чтоб ознакомиться с основными командами",
-        reply_markup=keyboard_start,
+        reply_markup=get_standart_city_keyboard(),
     )
 
 
