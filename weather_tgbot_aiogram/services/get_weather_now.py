@@ -1,26 +1,16 @@
 from datetime import datetime
-from enum import Enum
 from typing import Literal, NamedTuple
 
 import requests
 from config import config
 from exceptions.exceptions import GetWeatherServiceApiError
+from icon import WEATHER_DESCRIPTION_DICT, WeatherIcon
 from models.pydantic_models import WeatherNowJson
 from pydantic import ValidationError
 
 # Алиасы значений
 Celsius = int
 Meters_per_second = int
-
-
-class WeatherIcon(Enum):
-    Thunderstorm = "\U000026A1"
-    Drizzle = "\U00002614"
-    Rain = "\U00002614"
-    Snow = "\U0001F328"
-    Clear = "\U00002600"
-    Mist = "\U0001F32B"
-    Clouds = "\U00002601"
 
 
 class Weather(NamedTuple):
@@ -74,17 +64,7 @@ def _parse_weather_description(response_data: WeatherNowJson) -> WeatherIcon:
         weather_description_id = str(response_data.weather[0].id)
     except (IndexError, KeyError):
         raise GetWeatherServiceApiError
-    print(weather_description_id)
-    weather_description_dict = {
-        "2": WeatherIcon.Thunderstorm,
-        "3": WeatherIcon.Drizzle,
-        "5": WeatherIcon.Rain,
-        "6": WeatherIcon.Snow,
-        "70": WeatherIcon.Mist,
-        "800": WeatherIcon.Clear,
-        "80": WeatherIcon.Clouds,
-    }
-    for _id, _weather_icon in weather_description_dict.items():
+    for _id, _weather_icon in WEATHER_DESCRIPTION_DICT.items():
         if weather_description_id.startswith(_id):
             return _weather_icon
     raise GetWeatherServiceApiError
@@ -92,4 +72,5 @@ def _parse_weather_description(response_data: WeatherNowJson) -> WeatherIcon:
 
 def _parse_sun_time(response_data: WeatherNowJson,
                     time: Literal["sunrise"] | Literal["sunset"]) -> datetime:
+    print(response_data)
     return datetime.fromtimestamp(response_data.sys[time])

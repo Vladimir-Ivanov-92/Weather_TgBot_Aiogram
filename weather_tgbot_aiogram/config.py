@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     bot_token: SecretStr
     open_weather_token: SecretStr
     open_weather_url: str
+    open_weather_url_n_days: str
 
     # Вложенный класс с дополнительными указаниями для настроек
     class Config:

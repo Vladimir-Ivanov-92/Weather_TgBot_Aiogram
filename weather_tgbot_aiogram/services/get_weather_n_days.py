@@ -1,59 +1,78 @@
+from typing import List, NamedTuple
+
 import requests
 from config import config
-from icon import code_to_smile, picture_time_of_day
+from exceptions.exceptions import GetWeatherServiceApiError
+from icon import WEATHER_DESCRIPTION_DICT, WeatherIcon
 from models.pydantic_models import WeatherNDaysJson
+from pydantic import ValidationError
+
+# Алиасы значений
+Celsius = int
+Meters_per_second = int
+Date_and_time = str
 
 
-def get_weather_n_days(city, count: int):
+class WeatherNDays(NamedTuple):
+    temperature: Celsius
+    wind: Meters_per_second
+    weather_description: WeatherIcon
+    date: Date_and_time
+
+
+def get_weather_n_days(city: str, count: int) -> List[WeatherNDays]:
+    """Requests weather in openweathermap.org API and return it"""
+    open_weather_url = config.open_weather_url_n_days.format(
+        city=city,
+        open_weather_token=config.open_weather_token.get_secret_value(),
+        count=count
+    )
+    openweather_response_data = _get_openweather_response_data(open_weather_url)
+    weather_list = []
+    for period in range(1, count, 2):
+        weather = _parse_openweather_response_data(openweather_response_data, period)
+        weather_list.append(weather)
+    return weather_list
+
+
+def _get_openweather_response_data(url: str) -> WeatherNDaysJson:
+    r = requests.get(url)
     try:
-        r = requests.get(f"https://api.openweathermap.org/data/2.5/forecast?q={city}"
-                         f"&appid={config.open_weather_token.get_secret_value()}"
-                         f"&units=metric&lang=ru&cnt={count}"
-                         )
-
         data = WeatherNDaysJson.parse_raw(r.content)
-        message_reply = []
-        message_finaly = []
+    except ValidationError:
+        raise GetWeatherServiceApiError
+    return data
 
-        for i in range(1, count, 2):
-            city = data.city['name']
-            date_and_time = data.list[i].dt_txt
-            date = date_and_time.split(" ")[0]
-            time = date_and_time.split(" ")[1]
-            time_h_m = ":".join((time.split(":"))[:2])
 
-            if time_h_m in picture_time_of_day:
-                icon_time_of_day = picture_time_of_day[time_h_m]
-            else:
-                message_text = "Eror! icon_time_of_day"
+def _parse_openweather_response_data(response_data: WeatherNDaysJson,
+                                     period: int) -> WeatherNDays:
+    return WeatherNDays(
+        temperature=_parse_temperature(response_data, period),
+        wind=_parse_wind(response_data, period),
+        weather_description=_parse_weather_description(response_data, period),
+        date=_parse_data(response_data, period),
+    )
 
-            cur_weather = data.list[i].main['temp']
-            weather_description = data.list[i].weather[0].main
 
-            if weather_description in code_to_smile:
-                wd = code_to_smile[weather_description]
-            else:
-                message_text = "Посмотри в окно! Не пойму что там происходит!"
+def _parse_temperature(response_data: WeatherNDaysJson, period: int) -> Celsius:
+    return round(response_data.list[period].main['temp'])
 
-            wind = data.list[i].wind["speed"]
 
-            if time_h_m == "00:00" or time_h_m == "03:00":
-                message_text = f"****<u>{date}</u>****"
-                message_reply.append(message_text)
+def _parse_wind(response_data: WeatherNDaysJson, period: int) -> Meters_per_second:
+    return round(response_data.list[period].wind["speed"])
 
-            message_text = (
-                f"{icon_time_of_day} <u>{time_h_m}</u>\n"
-                f"Температура: <b>{cur_weather:.0f}</b>C° {wd}\n"
-                f"Скорость ветра: {wind:.0f} m/c\n"
-            )
-            message_reply.append(message_text)
 
-            message_string = "\n".join(message_reply)
-            message_finaly = (f"Погода в городе: <u>{city}</u>:\n"
-                              f"{message_string}"
-                              )
-        return message_finaly
-    except Exception as e:
-        print(e)
-        message_reply = ("\U00002620 Проверьте навание города \U00002620")
-        return message_reply
+def _parse_weather_description(response_data: WeatherNDaysJson,
+                               period: int) -> WeatherIcon:
+    try:
+        weather_description_id = str(response_data.list[period].weather[0].id)
+    except (IndexError, KeyError):
+        raise GetWeatherServiceApiError
+    for _id, _weather_icon in WEATHER_DESCRIPTION_DICT.items():
+        if weather_description_id.startswith(_id):
+            return _weather_icon
+    raise GetWeatherServiceApiError
+
+
+def _parse_data(response_data: WeatherNDaysJson, period: int) -> Date_and_time:
+    return response_data.list[period].dt_txt
