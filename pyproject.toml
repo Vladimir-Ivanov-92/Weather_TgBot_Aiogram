@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["vova2092 <vovai2092@yandex.ru>"]
 readme = "README.md"
-packages = [{include = "weather_tgbot_aiogram"}]
+#packages = [{include = "weather_tgbot_aiogram"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
